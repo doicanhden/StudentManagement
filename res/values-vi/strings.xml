@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Quản lý sinh viên</string>
+
+    <!-- Used in Student Management -->
+    <string name="button_show_add_student">Thêm sinh viên</string>
+    <string name="button_remove_first_student">Xóa sinh viên đầu!</string>
+    <string name="text_view_no_students">Không có sinh viên nào.\nNhấn \"Thêm sinh viên\" để thêm một sinh viên mới!</string>
+
+    <!-- Used in Student Activity Title -->
+    <string name="title_activity_student_add">Thêm Sinh Viên</string>
+    <string name="title_activity_student_details">Chi Tiết Sinh Viên</string>
+
+    <!-- Used in Student Activity layout -->
+    <string name="text_view_name">Họ và tên</string>
+    <string name="edit_text_name_hint">Họ và tên sinh viên</string>
+    <string name="text_view_birthday">Ngày sinh</string>
+    <string name="text_view_address">Địa chỉ</string>
+    <string name="edit_text_address_hint">Địa chỉ của sinh viên</string>
+    <string name="text_view_classname">Tên lớp</string>
+    <string name="edit_text_classname_hint">Tên lớp của sinh viên</string>
+
+    <!-- Used in Student Activity buttons -->
+    <string name="button_add_student">Thêm</string>
+    <string name="button_update_student">Cập nhật</string>
+    <string name="button_back">Quay lại</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_missing_info">Cảnh báo</string>
+    <string name="message_missing_info">Thiếu thông tin cá nhân!!</string>
+
+    <!-- Student Item -->
+    <string name="format_classname">Lớp: %s</string>
+    <string name="format_id">#%02d</string>
+    <string name="format_birthday_with_age">Sinh vào %1$te tháng %1$tm %1$tY (%2$d tuổi)</string>
+    <string name="format_birthday">Sinh vào %1$te tháng %1$tm %1$tY</string>
+    <!-- Student Item context menu -->
+    <string name="menu_student_item_detail">Chi tiết</string>
+    <string name="menu_student_item_delete">Xóa</string>
+
+    <!-- Avatar Context menu -->
+    <!-- Used in PhotoView Activity -->
+    <string name="title_photo_view">Ảnh đại diện sinh viên</string>
+    <string name="photo_take">Chụp một ảnh</string>
+    <string name="photo_choose">Chọn từ Thư viện</string>
+    <string name="photo_clear">Xóa ảnh</string>
+
+    <string name="photo_none">Chưa có ảnh!\nNhấn và giữ để xem Hành động.</string>
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Student Management</string>
+
+    <!-- Used in Student Management -->
+    <string name="button_show_add_student">Add student</string>
+    <string name="button_remove_first_student">Remove first!</string>
+    <string name="text_view_no_students">There is no student.\nPress \"Add student\" to add a new student!</string>
+
+    <!-- Used in Student Activity Title -->
+    <string name="title_activity_student_add">Add Student</string>
+    <string name="title_activity_student_details">Student Detail</string>
+
+    <!-- Used in Student Activity layout -->
+    <string name="text_view_name">Name</string>
+    <string name="edit_text_name_hint">Student\'s name</string>
+    <string name="text_view_birthday">Birthday</string>
+    <string name="text_view_address">Address</string>
+    <string name="edit_text_address_hint">Student\'s address</string>
+    <string name="text_view_classname">Classname</string>
+    <string name="edit_text_classname_hint">Student\'s classname</string>
+
+    <!-- Used in Student Activity buttons -->
+    <string name="button_add_student">Add</string>
+    <string name="button_update_student">Update!</string>
+    <string name="button_back">Back</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_missing_info">Alert</string>
+    <string name="message_missing_info">Missing personal information!!</string>
+
+    <!-- Student Item -->
+    <string name="format_classname">Class: %s</string>
+    <string name="format_id">#%02d</string>
+    <string name="format_birthday_with_age">Born on %1$tB %1$te, %1$tY (%2$d years old)</string>
+    <string name="format_birthday">Born on %1$tB %1$te, %1$tY</string>
+    
+    <!-- Student Item context menu -->
+    <string name="menu_student_item_detail">Detail</string>
+    <string name="menu_student_item_delete">Delete</string>
+
+    <!-- Avatar Context menu -->
+    <!-- Used in PhotoView Activity -->
+    <string name="title_photo_view">Student\'s avatar</string>
+    <string name="photo_take">Take a photo</string>
+    <string name="photo_choose">Choose from Library</string>
+    <string name="photo_clear">Clear</string>
+
+    <string name="photo_none">No photos yet!\nPress &amp; hold to see Action(s).</string>
+</resources>
