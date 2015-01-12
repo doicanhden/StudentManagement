@@ -1,6 +1,6 @@
 package tmg.labs.studentmanagement.controller;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import tmg.labs.studentmanagement.App;
 import tmg.labs.studentmanagement.R;
@@ -13,64 +13,65 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class StudentItem {
-	private final Context mContext;
-	private final ImageLoader mImageLoader;
+  private final Context mContext;
+  private final ImageLoader mImageLoader;
 
-	private final ImageView mImageViewPhoto;
-	private final TextView mTextViewName;
-	private final TextView mTextViewId;
-	private final TextView mTextViewDescription;
+  private final ImageView mImageViewPhoto;
+  private final TextView mTextViewName;
+  private final TextView mTextViewId;
+  private final TextView mTextViewDescription;
 
-	public StudentItem(View v) {
-		this.mContext = v.getContext();
+  public StudentItem(
+      View v) {
+    this.mContext = v.getContext();
 
-		this.mImageLoader = App.getIntance().getImageLoader();
+    this.mImageLoader = App.getIntance().getImageLoader();
 
-		this.mImageViewPhoto = (ImageView) v
-				.findViewById(R.id.imageview_student_photo);
-		this.mTextViewName = (TextView) v
-				.findViewById(R.id.textview_student_name);
-		this.mTextViewId = (TextView) v.findViewById(R.id.textview_student_id);
-		this.mTextViewDescription = (TextView) v
-				.findViewById(R.id.textview_description);
+    this.mImageViewPhoto =
+        (ImageView) v.findViewById(R.id.imageview_student_photo);
+    this.mTextViewName = (TextView) v.findViewById(R.id.textview_student_name);
+    this.mTextViewId = (TextView) v.findViewById(R.id.textview_student_id);
+    this.mTextViewDescription =
+        (TextView) v.findViewById(R.id.textview_description);
 
-	}
+  }
 
-	@SuppressWarnings("deprecation")
-	private static int getDiffYears(Date first, Date last) {
-		int diff = last.getYear() - first.getYear();
-		if (first.getMonth() > last.getMonth()
-				|| (first.getMonth() == last.getMonth() && first.getDate() > last
-						.getDate())) {
-			--diff;
-		}
+  private static int getDiffYears(Calendar f, Calendar l) {
+    int y = l.get(Calendar.YEAR) - f.get(Calendar.YEAR);
 
-		return diff;
-	}
+    if (f.get(Calendar.MONTH) > l.get(Calendar.MONTH) ||
+      (f.get(Calendar.MONTH) == l.get(Calendar.MONTH) && f.get(Calendar.DATE) > l.get(Calendar.DATE))) {
+      --y;
+    }
 
-	public void setStudent(int index, Student student) {
-		// assign values if the object is not null
-		if (student != null) {
-			final Resources resources = mContext.getResources();
+    return y;
+  }
 
-			mImageLoader.displayImage(mImageViewPhoto, student.getPhotoPath(),
-					R.drawable.default_photo);
-			mTextViewId.setText(resources.getString(R.string.format_id, index));
-			mTextViewName.setText(student.getName());
+  public void setStudent(int index, Student student) {
+    // assign values if the object is not null
+    if (student != null) {
+      final Resources resources = mContext.getResources();
 
-			final Date birthday = student.getBirthday();
-			if (birthday != null) {
-				final int age = getDiffYears(birthday, new Date());
-				if (age > 0) {
-					mTextViewDescription.setText(resources.getString(
-							R.string.format_birthday_with_age, birthday, age));
-				} else {
-					mTextViewDescription.setText(resources.getString(
-							R.string.format_birthday, birthday));
-				}
-			} else {
-				mTextViewDescription.setText(null);
-			}
-		}
-	}
+      mImageLoader.displayImage(mImageViewPhoto, student.getPhotoPath(),
+          R.drawable.default_photo);
+      mTextViewId.setText(resources.getString(R.string.format_id, index));
+      mTextViewName.setText(student.getName());
+
+      final Calendar birthday = student.getBirthday();
+      if (birthday != null) {
+        final int age = getDiffYears(birthday, Calendar.getInstance());
+        if (age > 0) {
+          mTextViewDescription.setText(resources.getString(
+              R.string.format_birthday_with_age, birthday, age));
+        }
+        else {
+          mTextViewDescription.setText(resources.getString(
+              R.string.format_birthday, birthday));
+        }
+      }
+      else {
+        mTextViewDescription.setText(null);
+      }
+    }
+  }
 }

@@ -2,7 +2,7 @@ package tmg.labs.studentmanagement.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
+import java.util.Calendar;
 
 import tmg.labs.studentmanagement.App;
 import tmg.labs.studentmanagement.DatabaseHandler;
@@ -27,241 +27,246 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class StudentActivity extends Activity {
-	protected static final int REQUEST_SELECT_FILE = 2;
-	protected static final int REQUEST_TAKE_PHOTO = 1;
+  protected static final int REQUEST_SELECT_FILE = 2;
+  protected static final int REQUEST_TAKE_PHOTO = 1;
 
-	private DatabaseHandler mDatabase;
-	private EditText mEditTextName;
-	private DatePicker mDatePickerBirthday;
-	private EditText mEditTextAddress;
-	private EditText mEditTextClassname;
-	private ImageView mImageViewPhoto;
-	private int mIntCurrentStudentId = 0;
-	private String mPhotoPath = null;
-	private String mCapturedPhotoPath = null;
-	private ImageLoader mImageLoader;
+  private DatabaseHandler mDatabase;
+  private EditText mEditTextName;
+  private DatePicker mDatePickerBirthday;
+  private EditText mEditTextAddress;
+  private EditText mEditTextClassname;
+  private ImageView mImageViewPhoto;
+  private int mIntCurrentStudentId = 0;
+  private String mPhotoPath = null;
+  private String mCapturedPhotoPath = null;
+  private ImageLoader mImageLoader;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_student);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_student);
 
-		mEditTextName = (EditText) findViewById(R.id.edittext_student_name);
-		mDatePickerBirthday = (DatePicker) findViewById(R.id.datepicker_student_birthday);
-		mEditTextAddress = (EditText) findViewById(R.id.edittext_student_address);
-		mEditTextClassname = (EditText) findViewById(R.id.edittext_student_classname);
+    mEditTextName = (EditText) findViewById(R.id.edittext_student_name);
+    mDatePickerBirthday =
+        (DatePicker) findViewById(R.id.datepicker_student_birthday);
+    mEditTextAddress = (EditText) findViewById(R.id.edittext_student_address);
+    mEditTextClassname =
+        (EditText) findViewById(R.id.edittext_student_classname);
 
-		mImageViewPhoto = (ImageView) findViewById(R.id.imageview_student_photo);
-		mImageViewPhoto.setOnClickListener(new OnClickListener() {
+    mImageViewPhoto = (ImageView) findViewById(R.id.imageview_student_photo);
+    mImageViewPhoto.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				if (mPhotoPath != null) {
-					File image = new File(mPhotoPath);
+      @Override
+      public void onClick(View v) {
+        if (mPhotoPath != null) {
+          File image = new File(mPhotoPath);
 
-					Intent intent = new Intent();
-					intent.setAction(android.content.Intent.ACTION_VIEW);
-					intent.setDataAndType(Uri.fromFile(image), "image/*");
+          Intent intent = new Intent();
+          intent.setAction(Intent.ACTION_VIEW);
+          intent.setDataAndType(Uri.fromFile(image), "image/*");
 
-					startActivity(intent);
-				} else {
-					Toast.makeText(StudentActivity.this, R.string.photo_none,
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-		registerForContextMenu(mImageViewPhoto);
+          startActivity(intent);
+        }
+        else {
+          Toast.makeText(StudentActivity.this, R.string.photo_none,
+              Toast.LENGTH_SHORT).show();
+        }
+      }
+    });
+    registerForContextMenu(mImageViewPhoto);
 
-		Button buttonAdd = (Button) findViewById(R.id.button_student_add);
-		buttonAdd.setOnClickListener(new OnClickListener() {
+    Button buttonAdd = (Button) findViewById(R.id.button_student_add);
+    buttonAdd.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				Student student = getStudent();
-				if (assertStudent(student)) {
-					mDatabase.insertStudent(student);
-					finish();
-				}
-			}
-		});
+      @Override
+      public void onClick(View v) {
+        Student student = getStudent();
+        if (assertStudent(student)) {
+          mDatabase.insertStudent(student);
+          finish();
+        }
+      }
+    });
 
-		Button buttonUpdate = (Button) findViewById(R.id.button_student_update);
-		buttonUpdate.setOnClickListener(new OnClickListener() {
+    Button buttonUpdate = (Button) findViewById(R.id.button_student_update);
+    buttonUpdate.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				Student student = getStudent();
-				if (assertStudent(student)) {
-					mDatabase.updateStudent(student);
-					finish();
-				}
-			}
-		});
+      @Override
+      public void onClick(View v) {
+        Student student = getStudent();
+        if (assertStudent(student)) {
+          mDatabase.updateStudent(student);
+          finish();
+        }
+      }
+    });
 
-		Button buttonBack = (Button) findViewById(R.id.button_back);
-		buttonBack.setOnClickListener(new OnClickListener() {
+    Button buttonBack = (Button) findViewById(R.id.button_back);
+    buttonBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
 
-		App app = (App) getApplicationContext();
-		mDatabase = app.getDbConnection();
-		mImageLoader = app.getImageLoader();
+    App app = (App) getApplicationContext();
+    mDatabase = app.getDbConnection();
+    mImageLoader = app.getImageLoader();
 
-		final Intent intent = getIntent();
-		if (intent != null) {
-			mIntCurrentStudentId = intent.getIntExtra("student_id", 0);
+    final Intent intent = getIntent();
+    if (intent != null) {
+      mIntCurrentStudentId = intent.getIntExtra("student_id", 0);
 
-			if (mIntCurrentStudentId > 0) {
-				this.setTitle(R.string.title_activity_student_details);
-				buttonAdd.setVisibility(View.GONE);
-				buttonBack.setVisibility(View.VISIBLE);
-				buttonUpdate.setVisibility(View.VISIBLE);
+      if (mIntCurrentStudentId > 0) {
+        this.setTitle(R.string.title_activity_student_details);
+        buttonAdd.setVisibility(View.GONE);
+        buttonBack.setVisibility(View.VISIBLE);
+        buttonUpdate.setVisibility(View.VISIBLE);
 
-				Student student = mDatabase.getStudent(mIntCurrentStudentId);
-				setStudent(student);
-			}
-		}
-	}
+        Student student = mDatabase.getStudent(mIntCurrentStudentId);
+        setStudent(student);
+      }
+    }
+  }
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v,
+      ContextMenuInfo menuInfo) {
+    super.onCreateContextMenu(menu, v, menuInfo);
 
-		if (v.getId() == R.id.imageview_student_photo) {
-			menu.setHeaderTitle(R.string.title_photo_view);
-			getMenuInflater().inflate(R.menu.photo, menu);
-		}
-	}
+    if (v.getId() == R.id.imageview_student_photo) {
+      menu.setHeaderTitle(R.string.title_photo_view);
+      getMenuInflater().inflate(R.menu.photo, menu);
+    }
+  }
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		int menuItemId = item.getItemId();
-		switch (menuItemId) {
-		case R.id.menu_photo_take:
-			dispatchTakePhotoIntent();
-			break;
-		case R.id.menu_photo_choose:
-			dispatchSelectPhotoIntent();
-			break;
-		case R.id.menu_photo_clear:
-			mPhotoPath = null;
-			mImageViewPhoto.setImageResource(R.drawable.default_photo);
-			break;
-		default:
-			return false;
-		}
+  @Override
+  public boolean onContextItemSelected(MenuItem item) {
+    int menuItemId = item.getItemId();
+    switch (menuItemId) {
+    case R.id.menu_photo_take:
+      dispatchTakePhotoIntent();
+      break;
+    case R.id.menu_photo_choose:
+      dispatchSelectPhotoIntent();
+      break;
+    case R.id.menu_photo_clear:
+      mPhotoPath = null;
+      mImageViewPhoto.setImageResource(R.drawable.default_photo);
+      break;
+    default:
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case REQUEST_TAKE_PHOTO:
-				mPhotoPath = mCapturedPhotoPath;
-				break;
-			case REQUEST_SELECT_FILE:
-				mPhotoPath = Utilities.getPath(this, data.getData());
-				break;
-			default:
-				return;
-			}
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode == RESULT_OK) {
+      switch (requestCode) {
+      case REQUEST_TAKE_PHOTO:
+        mPhotoPath = mCapturedPhotoPath;
+        break;
+      case REQUEST_SELECT_FILE:
+        mPhotoPath = Utilities.getPath(this, data.getData());
+        break;
+      default:
+        return;
+      }
 
-			updatePhoto();
-		}
-	}
+      updatePhoto();
+    }
+  }
 
-	private void updatePhoto() {
-		if (mPhotoPath != null) {
-			mImageLoader.displayImage(mImageViewPhoto, mPhotoPath,
-					R.drawable.default_photo);
-		} else {
-			mImageViewPhoto.setImageResource(R.drawable.default_photo);
-		}
-	}
+  private void updatePhoto() {
+    if (mPhotoPath != null) {
+      mImageLoader.displayImage(mImageViewPhoto, mPhotoPath,
+          R.drawable.default_photo);
+    }
+    else {
+      mImageViewPhoto.setImageResource(R.drawable.default_photo);
+    }
+  }
 
-	protected void dispatchTakePhotoIntent() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		// Ensure that there's a camera activity to handle the intent
-		if (intent.resolveActivity(getPackageManager()) != null) {
-			try {
-				// Create the File where the photo should go
-				File file = Utilities.createImageFile();
+  protected void dispatchTakePhotoIntent() {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    // Ensure that there's a camera activity to handle the intent
+    if (intent.resolveActivity(getPackageManager()) != null) {
+      try {
+        // Create the File where the photo should go
+        File file = Utilities.createImageFile();
 
-				mCapturedPhotoPath = file.getAbsolutePath();
-				// Continue only if the File was successfully created
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+        mCapturedPhotoPath = file.getAbsolutePath();
+        // Continue only if the File was successfully created
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 
-				startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+      }
+      catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
 
-	protected void dispatchSelectPhotoIntent() {
-		Intent intent = new Intent(Intent.ACTION_PICK,
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		intent.setType("image/*");
+  protected void dispatchSelectPhotoIntent() {
+    Intent intent = new Intent(Intent.ACTION_PICK,
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    intent.setType("image/*");
 
-		startActivityForResult(Intent.createChooser(intent, "Select File"),
-				REQUEST_SELECT_FILE);
-	}
+    startActivityForResult(Intent.createChooser(intent, "Select File"),
+        REQUEST_SELECT_FILE);
+  }
 
-	protected boolean assertStudent(Student student) {
-		if (student.isEmpty()) {
-			Toast toast = Toast.makeText(this, R.string.message_missing_info,
-					Toast.LENGTH_SHORT);
+  protected boolean assertStudent(Student student) {
+    if (student.isEmpty()) {
+      Toast toast = Toast.makeText(this, R.string.message_missing_info,
+          Toast.LENGTH_SHORT);
 
-			toast.show();
+      toast.show();
 
-			return false;
-		}
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	@SuppressWarnings("deprecation")
-	protected void setStudent(Student student) {
-		if (student != null) {
-			mPhotoPath = student.getPhotoPath();
+  protected void setStudent(Student student) {
+    if (student != null) {
+      mPhotoPath = student.getPhotoPath();
 
-			updatePhoto();
+      updatePhoto();
 
-			mEditTextName.setText(student.getName());
+      mEditTextName.setText(student.getName());
 
-			Date birthday = student.getBirthday();
-			mDatePickerBirthday.updateDate(birthday.getYear() + 1900,
-					birthday.getMonth(), birthday.getDate());
+      Calendar birthday = student.getBirthday();
+      mDatePickerBirthday.updateDate(birthday.get(Calendar.YEAR),
+          birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE));
 
-			mEditTextAddress.setText(student.getAddress());
-			mEditTextClassname.setText(student.getClassname());
-		}
-	}
+      mEditTextAddress.setText(student.getAddress());
+      mEditTextClassname.setText(student.getClassname());
+    }
+  }
 
-	@SuppressWarnings("deprecation")
-	protected Student getStudent() {
-		Date birthday = new Date(mDatePickerBirthday.getYear() - 1900,
-				mDatePickerBirthday.getMonth(),
-				mDatePickerBirthday.getDayOfMonth());
+  protected Student getStudent() {
 
-		Student student = new Student(mEditTextName.getText().toString(),
-				birthday, mEditTextAddress.getText().toString(),
-				mEditTextClassname.getText().toString());
+    Calendar birthday = Calendar.getInstance();
+    birthday.set(mDatePickerBirthday.getYear(),
+        mDatePickerBirthday.getMonth(),
+        mDatePickerBirthday.getDayOfMonth());
 
-		student.setPhotoPath(mPhotoPath);
+    Student student = new Student(mEditTextName.getText().toString(),
+        birthday, mEditTextAddress.getText().toString(),
+        mEditTextClassname.getText().toString());
 
-		if (mIntCurrentStudentId != 0) {
-			student.setId(mIntCurrentStudentId);
-		}
+    student.setPhotoPath(mPhotoPath);
 
-		return student;
-	}
+    if (mIntCurrentStudentId != 0) {
+      student.setId(mIntCurrentStudentId);
+    }
+
+    return student;
+  }
 }

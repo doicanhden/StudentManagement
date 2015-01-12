@@ -10,68 +10,70 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 public class StudentListAdapter extends BaseAdapter {
-	private final Activity mContext;
-	private final int mLayoutId;
-	private final List<Student> mStudentList;
+  private final Activity mContext;
+  private final int mLayoutId;
+  private final List<Student> mStudentList;
 
-	public StudentListAdapter(Activity context, int layoutId,
-			List<Student> objects) {
+  public StudentListAdapter(
+      Activity context, int layoutId,
+      List<Student> objects) {
 
-		this.mContext = context;
-		this.mLayoutId = layoutId;
-		this.mStudentList = objects;
-	}
+    this.mContext = context;
+    this.mLayoutId = layoutId;
+    this.mStudentList = objects;
+  }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		StudentItem item;
+  @Override
+  public View getView(int position, View convertView, ViewGroup parent) {
+    StudentItem item;
 
-		if (convertView == null) {
-			// inflate the layout
-			LayoutInflater inflater = mContext.getLayoutInflater();
-			convertView = inflater.inflate(mLayoutId, parent, false);
+    if (convertView == null) {
+      // inflate the layout
+      LayoutInflater inflater = mContext.getLayoutInflater();
+      convertView = inflater.inflate(mLayoutId, parent, false);
 
-			// well set up the ViewHolder
-			item = new StudentItem(convertView);
+      // well set up the ViewHolder
+      item = new StudentItem(convertView);
 
-			// store the holder with the view.
-			convertView.setTag(item);
-		} else {
-			// we've just avoided calling findViewById() on resource everytime
-			// just use the viewHolder
-			item = (StudentItem) convertView.getTag();
-		}
+      // store the holder with the view.
+      convertView.setTag(item);
+    }
+    else {
+      // we've just avoided calling findViewById() on resource everytime
+      // just use the viewHolder
+      item = (StudentItem) convertView.getTag();
+    }
 
-		// object item based on the position
-		item.setStudent(position + 1, mStudentList.get(position));
+    // object item based on the position
+    item.setStudent(position + 1, mStudentList.get(position));
 
-		return convertView;
-	}
+    return convertView;
+  }
 
-	@Override
-	public int getCount() {
-		if (mStudentList == null) {
-			return 0;
-		}
+  @Override
+  public int getCount() {
+    if (mStudentList == null) {
+      return 0;
+    }
 
-		return mStudentList.size();
-	}
+    return mStudentList.size();
+  }
 
-	@Override
-	public Object getItem(int arg0) {
-		if (mStudentList == null) {
-			return null;
-		}
+  @Override
+  public Object getItem(int arg0) {
+    if (mStudentList == null) {
+      return null;
+    }
 
-		return mStudentList.get(arg0);
-	}
+    return mStudentList.get(arg0);
+  }
 
-	@Override
-	public long getItemId(int arg0) {
-		if (mStudentList == null) {
-			return 0;
-		}
+  @Override
+  public long getItemId(int arg0) {
+    if (mStudentList == null) {
+      return 0;
+    }
 
-		return mStudentList.get(arg0).getId();
-	}
+    return mStudentList.get(arg0).getId();
+  }
 }

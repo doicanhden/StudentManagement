@@ -7,58 +7,59 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class App extends Application {
-	private ImageLoader mImageLoader = null;
-	private DatabaseHandler mDatabase = null;
-	private MemoryCache<String, Bitmap> mMemCache = null;
-	private static App sIntance = null;
+  private ImageLoader mImageLoader = null;
+  private DatabaseHandler mDatabase = null;
+  private MemoryCache<String, Bitmap> mMemCache = null;
+  private static App sIntance = null;
 
-	public static App getIntance() {
-		return sIntance;
-	}
+  public static App getIntance() {
+    return sIntance;
+  }
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		sIntance = this;
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    sIntance = this;
 
-		mDatabase = new DatabaseHandler(this);
+    mDatabase = new DatabaseHandler(this);
 
-		mMemCache = new MemoryCache<String, Bitmap>() {
+    mMemCache = new MemoryCache<String, Bitmap>() {
 
-			@Override
-			protected long getSizeInBytes(Bitmap bitmap) {
-				if (bitmap == null)
-					return 0;
+      @Override
+      protected long getSizeInBytes(Bitmap bitmap) {
+        if (bitmap == null)
+          return 0;
 
-				return bitmap.getRowBytes() * bitmap.getHeight();
-			}
-		};
+        return bitmap.getRowBytes() * bitmap.getHeight();
+      }
+    };
 
-		mImageLoader = new ImageLoader(mMemCache) {
+    mImageLoader = new ImageLoader(mMemCache) {
 
-			@Override
-			protected Bitmap loadBitmap(String path) {
-				try {
-					BitmapFactory.Options options = new BitmapFactory.Options();
-					options.inSampleSize = 8;
+      @Override
+      protected Bitmap loadBitmap(String path) {
+        try {
+          BitmapFactory.Options options = new BitmapFactory.Options();
+          options.inSampleSize = 8;
 
-					return BitmapFactory.decodeFile(path, options);
-				} catch (Throwable ex) {
-					ex.printStackTrace();
-					if (ex instanceof OutOfMemoryError)
-						clearCache();
+          return BitmapFactory.decodeFile(path, options);
+        }
+        catch (Throwable ex) {
+          ex.printStackTrace();
+          if (ex instanceof OutOfMemoryError)
+            clearCache();
 
-					return null;
-				}
-			}
-		};
-	}
+          return null;
+        }
+      }
+    };
+  }
 
-	public DatabaseHandler getDbConnection() {
-		return mDatabase;
-	}
+  public DatabaseHandler getDbConnection() {
+    return mDatabase;
+  }
 
-	public ImageLoader getImageLoader() {
-		return mImageLoader;
-	}
+  public ImageLoader getImageLoader() {
+    return mImageLoader;
+  }
 }

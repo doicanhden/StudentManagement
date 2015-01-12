@@ -1,6 +1,6 @@
 package tmg.labs.studentmanagement.model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class Student {
 	private int id;
@@ -8,7 +8,7 @@ public class Student {
 	private String name;
 	private String address;
 	private String classname;
-	private Date birthday;
+	private Calendar birthday;
 
 	public Student() {
 
@@ -18,7 +18,7 @@ public class Student {
 		return name == null || name.equals("");
 	}
 
-	public Student(String name, Date birthday, String address, String classname) {
+	public Student(String name, Calendar birthday, String address, String classname) {
 		super();
 		this.name = name;
 		this.birthday = birthday;
@@ -66,11 +66,11 @@ public class Student {
 		this.classname = classname;
 	}
 
-	public Date getBirthday() {
+	public Calendar getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday) {
+	public void setBirthday(Calendar birthday) {
 		this.birthday = birthday;
 	}
 
