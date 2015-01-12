@@ -76,8 +76,8 @@ public class StudentManagementActivity extends Activity {
     mListViewStudents.setOnItemClickListener(new OnItemClickListener() {
 
       @Override
-      public void onItemClick(AdapterView<?> parent, View view,
-          int position, long id) {
+      public void onItemClick(
+          AdapterView<?> parent, View view, int position, long id) {
         int studentId = mStudentList.get(position).getId();
 
         showStudentDetail(studentId);
@@ -87,8 +87,8 @@ public class StudentManagementActivity extends Activity {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v,
-      ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(
+      ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     if (v.getId() == R.id.listview_student) {
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 

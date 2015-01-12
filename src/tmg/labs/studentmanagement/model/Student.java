@@ -1,77 +1,78 @@
 package tmg.labs.studentmanagement.model;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class Student {
-	private int id;
-	private String photoPath;
-	private String name;
-	private String address;
-	private String classname;
-	private Calendar birthday;
+  private int id;
+  private String photoPath;
+  private String name;
+  private String address;
+  private String classname;
+  private Date birthday;
 
-	public Student() {
+  public Student() {
 
-	}
+  }
 
-	public boolean isEmpty() {
-		return name == null || name.equals("");
-	}
+  public boolean isEmpty() {
+    return name == null || name.equals("");
+  }
 
-	public Student(String name, Calendar birthday, String address, String classname) {
-		super();
-		this.name = name;
-		this.birthday = birthday;
-		this.address = address;
-		this.classname = classname;
-	}
+  public Student(
+      String name, Date birthday, String address, String classname) {
+    super();
+    this.name = name;
+    this.birthday = birthday;
+    this.address = address;
+    this.classname = classname;
+  }
 
-	public int getId() {
-		return id;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public String getPhotoPath() {
-		return photoPath;
-	}
+  public String getPhotoPath() {
+    return photoPath;
+  }
 
-	public void setPhotoPath(String path) {
-		this.photoPath = path;
-	}
+  public void setPhotoPath(String path) {
+    this.photoPath = path;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getAddress() {
-		return address;
-	}
+  public String getAddress() {
+    return address;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-	public String getClassname() {
-		return classname;
-	}
+  public String getClassname() {
+    return classname;
+  }
 
-	public void setClassname(String classname) {
-		this.classname = classname;
-	}
+  public void setClassname(String classname) {
+    this.classname = classname;
+  }
 
-	public Calendar getBirthday() {
-		return birthday;
-	}
+  public Date getBirthday() {
+    return birthday;
+  }
 
-	public void setBirthday(Calendar birthday) {
-		this.birthday = birthday;
-	}
+  public void setBirthday(Date birthday) {
+    this.birthday = birthday;
+  }
 
 }

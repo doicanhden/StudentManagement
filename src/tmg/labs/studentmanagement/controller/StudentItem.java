@@ -1,11 +1,12 @@
 package tmg.labs.studentmanagement.controller;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import tmg.labs.studentmanagement.App;
 import tmg.labs.studentmanagement.R;
 import tmg.labs.studentmanagement.model.Student;
 import tmg.labs.studentmanagement.util.ImageLoader;
+import tmg.labs.studentmanagement.util.Utilities;
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
@@ -27,24 +28,13 @@ public class StudentItem {
 
     this.mImageLoader = App.getIntance().getImageLoader();
 
-    this.mImageViewPhoto =
-        (ImageView) v.findViewById(R.id.imageview_student_photo);
+    this.mImageViewPhoto = (ImageView) v
+        .findViewById(R.id.imageview_student_photo);
     this.mTextViewName = (TextView) v.findViewById(R.id.textview_student_name);
     this.mTextViewId = (TextView) v.findViewById(R.id.textview_student_id);
-    this.mTextViewDescription =
-        (TextView) v.findViewById(R.id.textview_description);
+    this.mTextViewDescription = (TextView) v
+        .findViewById(R.id.textview_description);
 
-  }
-
-  private static int getDiffYears(Calendar f, Calendar l) {
-    int y = l.get(Calendar.YEAR) - f.get(Calendar.YEAR);
-
-    if (f.get(Calendar.MONTH) > l.get(Calendar.MONTH) ||
-      (f.get(Calendar.MONTH) == l.get(Calendar.MONTH) && f.get(Calendar.DATE) > l.get(Calendar.DATE))) {
-      --y;
-    }
-
-    return y;
   }
 
   public void setStudent(int index, Student student) {
@@ -57,9 +47,9 @@ public class StudentItem {
       mTextViewId.setText(resources.getString(R.string.format_id, index));
       mTextViewName.setText(student.getName());
 
-      final Calendar birthday = student.getBirthday();
+      final Date birthday = student.getBirthday();
       if (birthday != null) {
-        final int age = getDiffYears(birthday, Calendar.getInstance());
+        final int age = Utilities.calcAge(birthday);
         if (age > 0) {
           mTextViewDescription.setText(resources.getString(
               R.string.format_birthday_with_age, birthday, age));

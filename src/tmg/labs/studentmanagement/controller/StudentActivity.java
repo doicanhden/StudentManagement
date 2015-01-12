@@ -47,11 +47,9 @@ public class StudentActivity extends Activity {
     setContentView(R.layout.activity_student);
 
     mEditTextName = (EditText) findViewById(R.id.edittext_student_name);
-    mDatePickerBirthday =
-        (DatePicker) findViewById(R.id.datepicker_student_birthday);
+    mDatePickerBirthday = (DatePicker) findViewById(R.id.datepicker_student_birthday);
     mEditTextAddress = (EditText) findViewById(R.id.edittext_student_address);
-    mEditTextClassname =
-        (EditText) findViewById(R.id.edittext_student_classname);
+    mEditTextClassname = (EditText) findViewById(R.id.edittext_student_classname);
 
     mImageViewPhoto = (ImageView) findViewById(R.id.imageview_student_photo);
     mImageViewPhoto.setOnClickListener(new OnClickListener() {
@@ -110,29 +108,36 @@ public class StudentActivity extends Activity {
       }
     });
 
-    App app = (App) getApplicationContext();
-    mDatabase = app.getDbConnection();
-    mImageLoader = app.getImageLoader();
-
     final Intent intent = getIntent();
     if (intent != null) {
       mIntCurrentStudentId = intent.getIntExtra("student_id", 0);
 
       if (mIntCurrentStudentId > 0) {
         this.setTitle(R.string.title_activity_student_details);
+
         buttonAdd.setVisibility(View.GONE);
         buttonBack.setVisibility(View.VISIBLE);
         buttonUpdate.setVisibility(View.VISIBLE);
-
-        Student student = mDatabase.getStudent(mIntCurrentStudentId);
-        setStudent(student);
       }
     }
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v,
-      ContextMenuInfo menuInfo) {
+  protected void onResume() {
+    super.onResume();
+    final App app = (App) getApplicationContext();
+    mDatabase = app.getDbConnection();
+    mImageLoader = app.getImageLoader();
+
+    if (mIntCurrentStudentId > 0) {
+      final Student student = mDatabase.getStudent(mIntCurrentStudentId);
+      setStudent(student);
+    }
+  }
+
+  @Override
+  public void onCreateContextMenu(
+      ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
     if (v.getId() == R.id.imageview_student_photo) {
@@ -192,12 +197,12 @@ public class StudentActivity extends Activity {
   }
 
   protected void dispatchTakePhotoIntent() {
-    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     // Ensure that there's a camera activity to handle the intent
     if (intent.resolveActivity(getPackageManager()) != null) {
       try {
         // Create the File where the photo should go
-        File file = Utilities.createImageFile();
+        final File file = Utilities.createImageFile();
 
         mCapturedPhotoPath = file.getAbsolutePath();
         // Continue only if the File was successfully created
@@ -212,7 +217,7 @@ public class StudentActivity extends Activity {
   }
 
   protected void dispatchSelectPhotoIntent() {
-    Intent intent = new Intent(Intent.ACTION_PICK,
+    final Intent intent = new Intent(Intent.ACTION_PICK,
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     intent.setType("image/*");
 
@@ -222,7 +227,7 @@ public class StudentActivity extends Activity {
 
   protected boolean assertStudent(Student student) {
     if (student.isEmpty()) {
-      Toast toast = Toast.makeText(this, R.string.message_missing_info,
+      final Toast toast = Toast.makeText(this, R.string.message_missing_info,
           Toast.LENGTH_SHORT);
 
       toast.show();
@@ -241,9 +246,11 @@ public class StudentActivity extends Activity {
 
       mEditTextName.setText(student.getName());
 
-      Calendar birthday = student.getBirthday();
-      mDatePickerBirthday.updateDate(birthday.get(Calendar.YEAR),
-          birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE));
+      Calendar birthday = Calendar.getInstance();
+      birthday.setTime(student.getBirthday());
+
+      mDatePickerBirthday.updateDate(birthday.get(Calendar.YEAR), birthday
+          .get(Calendar.MONTH), birthday.get(Calendar.DATE));
 
       mEditTextAddress.setText(student.getAddress());
       mEditTextClassname.setText(student.getClassname());
@@ -252,14 +259,14 @@ public class StudentActivity extends Activity {
 
   protected Student getStudent() {
 
-    Calendar birthday = Calendar.getInstance();
-    birthday.set(mDatePickerBirthday.getYear(),
-        mDatePickerBirthday.getMonth(),
+    final Calendar birthday = Calendar.getInstance();
+    birthday.set(mDatePickerBirthday.getYear(), mDatePickerBirthday.getMonth(),
         mDatePickerBirthday.getDayOfMonth());
 
-    Student student = new Student(mEditTextName.getText().toString(),
-        birthday, mEditTextAddress.getText().toString(),
-        mEditTextClassname.getText().toString());
+    Student student = new Student(mEditTextName.getText().toString(), birthday
+        .getTime(), mEditTextAddress.getText().toString(), mEditTextClassname
+        .getText()
+        .toString());
 
     student.setPhotoPath(mPhotoPath);
 

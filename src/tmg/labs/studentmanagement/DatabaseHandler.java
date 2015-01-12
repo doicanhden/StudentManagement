@@ -3,7 +3,6 @@ package tmg.labs.studentmanagement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-  protected SimpleDateFormat mDateFormat = new SimpleDateFormat(
+  protected final SimpleDateFormat mDateFormat = new SimpleDateFormat(
       "yyyy-MM-dd HH:mm:ss.SSSZ", Locale.US);
 
   public static final String DATABASE_NAME = "student.db";
@@ -35,11 +34,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase db) {
-    db.execSQL("create table "
-      +
-      STUDENTS_TABLE_NAME
-      +
-      "(id integer primary key, name text, avatar text, birthday text, address text, classname text)");
+    db
+        .execSQL("create table " +
+          STUDENTS_TABLE_NAME +
+          "(id integer primary key, name text, avatar text, birthday text, address text, classname text)");
   }
 
   @Override
@@ -53,13 +51,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     try {
       ContentValues contentValues = new ContentValues();
       contentValues.put(STUDENTS_COLUMN_NAME, student.getName());
-      contentValues.put(STUDENTS_COLUMN_AVATAR_PATH,
-          student.getPhotoPath());
-      contentValues.put(STUDENTS_COLUMN_BIRTHDAY,
-          mDateFormat.format(student.getBirthday()));
+      contentValues.put(STUDENTS_COLUMN_AVATAR_PATH, student.getPhotoPath());
+      contentValues.put(STUDENTS_COLUMN_BIRTHDAY, mDateFormat.format(student
+          .getBirthday()));
       contentValues.put(STUDENTS_COLUMN_ADDRESS, student.getAddress());
-      contentValues
-                   .put(STUDENTS_COLUMN_CLASSNAME, student.getClassname());
+      contentValues.put(STUDENTS_COLUMN_CLASSNAME, student.getClassname());
 
       db.insert(STUDENTS_TABLE_NAME, null, contentValues);
 
@@ -73,8 +69,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
   public List<Student> getAllStudents() {
     SQLiteDatabase db = this.getWritableDatabase();
-    Cursor cursor = db.rawQuery("select * from " + STUDENTS_TABLE_NAME,
-        null);
+    Cursor cursor = db.rawQuery("select * from " + STUDENTS_TABLE_NAME, null);
     try {
       return toStudentList(cursor);
     }
@@ -86,8 +81,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
   public Student getStudent(int id) {
     SQLiteDatabase db = this.getWritableDatabase();
-    Cursor cursor = db.rawQuery("select * from " + STUDENTS_TABLE_NAME
-      + " where id=" + id, null);
+    Cursor cursor = db.rawQuery("select * from " + STUDENTS_TABLE_NAME +
+      " where id=" + id, null);
     try {
       List<Student> studentList = toStudentList(cursor);
       return studentList.isEmpty() ? null : studentList.get(0);
@@ -113,13 +108,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     try {
       ContentValues contentValues = new ContentValues();
       contentValues.put(STUDENTS_COLUMN_NAME, student.getName());
-      contentValues.put(STUDENTS_COLUMN_AVATAR_PATH,
-          student.getPhotoPath());
-      contentValues.put(STUDENTS_COLUMN_BIRTHDAY,
-          mDateFormat.format(student.getBirthday()));
+      contentValues.put(STUDENTS_COLUMN_AVATAR_PATH, student.getPhotoPath());
+      contentValues.put(STUDENTS_COLUMN_BIRTHDAY, mDateFormat.format(student
+          .getBirthday()));
       contentValues.put(STUDENTS_COLUMN_ADDRESS, student.getAddress());
-      contentValues
-                   .put(STUDENTS_COLUMN_CLASSNAME, student.getClassname());
+      contentValues.put(STUDENTS_COLUMN_CLASSNAME, student.getClassname());
 
       db.update(STUDENTS_TABLE_NAME, contentValues, "id = ? ",
           new String[] {Integer.toString(student.getId())});
@@ -133,8 +126,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
   public Integer deleteStudent(int id) {
     SQLiteDatabase db = this.getWritableDatabase();
     try {
-      return db.delete(STUDENTS_TABLE_NAME, "id = ? ",
-          new String[] {Integer.toString(id)});
+      return db.delete(STUDENTS_TABLE_NAME, "id = ? ", new String[] {Integer
+          .toString(id)});
     }
     finally {
       db.close();
@@ -146,18 +139,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     try {
       if (cursor != null && cursor.moveToFirst()) {
 
-        final int idxId =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_ID);
-        final int idxName =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_NAME);
-        final int idxAvatarPath =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_AVATAR_PATH);
-        final int idxBirthday =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_BIRTHDAY);
-        final int idxAddress =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_ADDRESS);
-        final int idxClassname =
-            cursor.getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_CLASSNAME);
+        final int idxId = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_ID);
+        final int idxName = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_NAME);
+        final int idxAvatarPath = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_AVATAR_PATH);
+        final int idxBirthday = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_BIRTHDAY);
+        final int idxAddress = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_ADDRESS);
+        final int idxClassname = cursor
+            .getColumnIndex(DatabaseHandler.STUDENTS_COLUMN_CLASSNAME);
 
         do {
           final Student student = new Student();
@@ -165,14 +158,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
           student.setId(cursor.getInt(idxId));
           student.setName(cursor.getString(idxName));
           student.setPhotoPath(cursor.getString(idxAvatarPath));
-
-          Calendar birthday = Calendar.getInstance();
-          birthday.setTime(mDateFormat.parse(cursor.getString(idxBirthday)));
-
-          student.setBirthday(birthday);
-
+          student.setBirthday(mDateFormat.parse(cursor.getString(idxBirthday)));
           student.setAddress(cursor.getString(idxAddress));
-
           student.setClassname(cursor.getString(idxClassname));
 
           studentList.add(student);

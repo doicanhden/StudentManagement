@@ -15,8 +15,7 @@ public class StudentListAdapter extends BaseAdapter {
   private final List<Student> mStudentList;
 
   public StudentListAdapter(
-      Activity context, int layoutId,
-      List<Student> objects) {
+      Activity context, int layoutId, List<Student> objects) {
 
     this.mContext = context;
     this.mLayoutId = layoutId;
